@@ -1,5 +1,5 @@
-#ifndef X11_H
-#define X11_H
+#ifndef RENDER_H
+#define RENDER_H
 
 #include <stdio.h>
 #include <stdlib.h>

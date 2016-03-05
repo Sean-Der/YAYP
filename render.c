@@ -1,4 +1,4 @@
-#include "x11.h"
+#include "render.h"
 #include "y4m.h"
 
 void drawPixelMap(void) {

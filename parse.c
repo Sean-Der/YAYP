@@ -1,4 +1,4 @@
-#include "parser.h"
+#include "parse.h"
 
 int width_read(char *val, Y4M *y4m) {
   y4m->width = strtol(val, NULL, 10);
@@ -96,7 +96,6 @@ int header_parser(char *buff, Y4M *y4m, char arg, int (*cb) (char *val, Y4M *y4m
 }
 
 int readY4M(char *file, Y4M *y4m) {
-  //TODO handle header > 1028
   char buff[1028];
   int return_code = 0;
 

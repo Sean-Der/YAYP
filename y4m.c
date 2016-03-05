@@ -1,7 +1,7 @@
 #include "y4m.h"
 #include "error.h"
-#include "x11.h"
-#include "parser.h"
+#include "render.h"
+#include "parse.h"
 
 int main(int argc, char *argv[]) {
   Y4M y4m;
