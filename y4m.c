@@ -4,7 +4,7 @@
 #include "parse.h"
 
 int main(int argc, char *argv[]) {
-  Y4M y4m;
+  Y4M y4m = {.aspect_ratio = NULL};
   int return_code = 0;
 
   if (argc != 2) {
@@ -18,8 +18,12 @@ int main(int argc, char *argv[]) {
     return_code = 1;
     goto cleanup;
   }
+  renderY4M(&y4m);
 
 cleanup:
+  if (y4m.aspect_ratio) {
+    free(y4m.aspect_ratio);
+  }
+
   return return_code;
 }
-

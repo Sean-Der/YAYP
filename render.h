@@ -9,9 +9,11 @@
 #include <X11/Xutil.h>
 #include <X11/Intrinsic.h>
 
-void drawPixelMap(void);
-GC create_gc(Display* display, Window win);
-void draw_pixel(Display* d, GC gc, Window w, Colormap screen_colormap,
-		char* color, int x, int y);
+#include "y4m.h"
+
+void renderY4M(Y4M *y4m);
+
+void draw_pixel(Display *d, GC gc, Window w, Colormap screen_colormap,
+                unsigned short r, unsigned short g, unsigned short b, int x, int y);
 
 #endif
