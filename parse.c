@@ -57,7 +57,7 @@ int color_space_read(char *val, Y4M *y4m) {
     y4m->color_space = C422;
   } else if (!strcmp("444", val)) {
     y4m->color_space = C444;
-  } else if (!strcmp("mono\n", val)) {
+  } else if (!strcmp("mono", val)) {
     y4m->color_space = Cmono;
   } else {
     y4m_error("Invalid color space: %s", val);
@@ -72,7 +72,7 @@ int header_parser(char *buff, Y4M *y4m, char arg, int (*cb) (char *val, Y4M *y4m
   do {
     if (start == NULL && *end == arg) {
       start = end + 1;
-    } else if (start && (*end == ' ' || *end == '\0')) {
+    } else if (start && (*end == ' ' || *end == '\0' || *end == '\n')) {
       char new[end - start + 1];
       strncpy(new, start, end - start);
       new[end - start] = '\0';

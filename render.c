@@ -29,31 +29,44 @@ void renderY4M(Y4M *y4m) {
   }
 
   s = DefaultScreen(d);
+  XWindowAttributes atts;
   Window w = XCreateSimpleWindow(d, RootWindow(d, s), 0, 0, y4m->width, y4m->height, 1,
                                  BlackPixel(d, s), WhitePixel(d, s));
+  XGetWindowAttributes(d, w, &atts);
   XGCValues values;
   GC gc = XCreateGC(d, w, 0, &values);
-  Colormap screen_colormap = DefaultColormap(d, s);
 
   XStoreName(d, w, "y4m player");
   XSelectInput(d, w, ExposureMask | KeyPressMask);
   XMapWindow(d, w);
 
+  char *buff = calloc(1, y4m->width * y4m->height * 4);
+  unsigned long offset;
+  XImage *xim = XCreateImage(d, NULL, atts.depth, ZPixmap, 0, buff, y4m->width, y4m->height, 8, 0);
+
   while (1) {
+
     XNextEvent(d, &e);
     if (e.type == KeyPress && e.xkey.keycode == 53) {
       break;
     }
     if (e.type == KeyPress && e.xkey.keycode == 46) {
       moving_frame = frame = get_frame(y4m, 6, y4m->width * y4m->height * 3);
+      offset = 0;
 
       for (int y = 0; y < y4m->height; y++) {
         for (int x = 0; x < y4m->width; x++) {
           y_color = *(moving_frame++);
           yuv_to_rgb(y_color, u_color, v_color, &r, &g, &b);
-          draw_pixel(d, gc, w, screen_colormap, r * 257, g * 257, b * 257, x, y);
+
+          //BGR (May be machine specific)
+          buff[offset++] = r | g | b;
+          buff[offset++] = r | g | b;
+          buff[offset++] = r | g | b;
+          offset++;
         }
       }
+      XPutImage(d, w, gc, xim, 0, 0, 0, 0, y4m->width, y4m->height);
 
       free(frame);
       if (feof(y4m->fp)) {
@@ -62,18 +75,8 @@ void renderY4M(Y4M *y4m) {
     }
   }
 
+  XDestroyImage(xim);
+  //free(buff);
   XFreeGC(d, gc);
   XCloseDisplay(d);
-}
-
-void draw_pixel(Display *d, GC gc, Window w, Colormap screen_colormap,
-                unsigned short r, unsigned short g, unsigned short b, int x, int y) {
-  XColor xcolor;
-  xcolor.flags= DoRed | DoGreen | DoBlue;
-  xcolor.red = r;
-  xcolor.green = g;
-  xcolor.blue = b;
-  XAllocColor(d, screen_colormap, &xcolor);
-  XSetForeground(d, gc, xcolor.pixel);
-  XDrawPoint(d, w, gc, x, y);
 }

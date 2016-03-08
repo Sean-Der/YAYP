@@ -13,7 +13,6 @@
 
 void renderY4M(Y4M *y4m);
 
-void draw_pixel(Display *d, GC gc, Window w, Colormap screen_colormap,
-                unsigned short r, unsigned short g, unsigned short b, int x, int y);
+void draw_pixel(Display *d, XImage *xim, Colormap *screen_colormap, unsigned short r, unsigned short g, unsigned short b, int x, int y);
 
 #endif
